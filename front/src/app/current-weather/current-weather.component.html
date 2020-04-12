@@ -1,0 +1,27 @@
+<mat-card class="weather">
+  <mat-card-content>
+
+    <mat-card>
+      <mat-card-content>
+        <label> Город
+          <input #city type="text" required>
+        </label>
+        <label> Регион
+          <input #region type="text" required>
+        </label>
+        <label> Страна
+          <input #country type="text" required>
+        </label>
+
+        <button (click)="getCurrentWeather(city.value, region.value, country.value)"> Получить прогноз </button>
+
+        <div id="temp"> </div>
+        <div id="pres"> </div>
+        <div id="app_temp"> </div>
+        <div id="rh"> </div>
+        <div id="clouds"> </div>
+        <div id="wind_spd"> </div>
+      </mat-card-content>
+    </mat-card>
+  </mat-card-content>
+</mat-card>
