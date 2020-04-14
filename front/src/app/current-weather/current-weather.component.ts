@@ -8,7 +8,7 @@ import { BackApiService } from '../back-api.service';
 })
 export class CurrentWeatherComponent implements OnInit {
 
-   weather: any
+   private weather = {}
    temp: any
    pres: any
    app_temp: any
@@ -21,13 +21,16 @@ export class CurrentWeatherComponent implements OnInit {
 
   getCurrentWeather(city, region, country) {
       const data = {
-          query: "$city $region $country"
+          query: `${city} ${region} ${country}`
       }
 
       this.api.getWeather(data)
               .subscribe(response => {
-                  this.weather = response['data']
+                  console.log(response);
+                  this.weather = response['data'];
               })
+
+       console.log(this.weather)
 
       this.temp = this.weather['temp']
       this.pres = this.weather['pres']

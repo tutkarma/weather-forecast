@@ -15,10 +15,14 @@ weather = Blueprint('weather', __name__)
 CORS(weather)
 
 
-@weather.route('/weather', methods=['GET'])
-def get_weather(data):
-    query = data['query']
-    print(query)
+@weather.route('/weather', methods=['POST'])
+def get_weather():
+    data = request.get_json(force=True)
+
+    try:
+        query = data['query']
+    except KeyError:
+        raise BadRequest('Query not defined')
 
     try:
         gn = geocoders.GeoNames(username=GEO_NAMES_USERNAME)
@@ -28,6 +32,9 @@ def get_weather(data):
     try:
         coords = gn.geocode(query)
     except Exception:
+        raise BadRequest('Service is unavailable')
+
+    if coords is None:
         raise BadRequest('Failed to get city coordinates')
 
     d = {
@@ -42,7 +49,6 @@ def get_weather(data):
     except Exception:
         raise BadRequest('Failed to get weather forecast')
 
-    print(response)
     return Response(
         json.dumps({'data': response}),
         status=200,

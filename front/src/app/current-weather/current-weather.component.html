@@ -15,12 +15,12 @@
 
         <button (click)="getCurrentWeather(city.value, region.value, country.value)"> Получить прогноз </button>
 
-        <div id="temp"> </div>
-        <div id="pres"> </div>
-        <div id="app_temp"> </div>
-        <div id="rh"> </div>
-        <div id="clouds"> </div>
-        <div id="wind_spd"> </div>
+        <div id="temp"> Temperature (Celcius) <p style="padding-left: 5px">{{temp}}</p> </div>
+        <div id="pres"> Pressure (mb) <p style="padding-left: 5px">{{pres}}</p> </div>
+        <div id="app_temp"> "Feels Like" temperature (Celcius) <p style="padding-left: 5px">{{app_temp}}</p> </div>
+        <div id="rh">  Relative humidity (%) <p style="padding-left: 5px">{{rh}}</p> </div>
+        <div id="clouds"> Cloud coverage (%) <p style="padding-left: 5px">{{clouds}}</p> </div>
+        <div id="wind_spd"> Wind speed (m/s) <p style="padding-left: 5px">{{wind_spd}}</p> </div>
       </mat-card-content>
     </mat-card>
   </mat-card-content>
