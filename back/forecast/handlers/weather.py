@@ -1,7 +1,7 @@
 import os
 
 from geopy import geocoders
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, NotFound
 from flask import Blueprint, request, Response, current_app, json
 from flask_cors import CORS
 
@@ -35,7 +35,7 @@ def get_weather():
         raise BadRequest('Service is unavailable')
 
     if coords is None:
-        raise BadRequest('Failed to get city coordinates')
+        raise NotFound('Failed to get city coordinates')
 
     d = {
         'lat': coords.latitude,

@@ -3,17 +3,34 @@
 
     <mat-card>
       <mat-card-content>
-        <label> Город
-          <input #city type="text" required>
-        </label>
-        <label> Регион
-          <input #region type="text" required>
-        </label>
-        <label> Страна
-          <input #country type="text" required>
-        </label>
 
-        <button (click)="getCurrentWeather(city.value, region.value, country.value)"> Получить прогноз </button>
+      <form class="form">
+        <mat-form-field class="full-width">
+          <mat-label>City</mat-label>
+            <input #city matInput [formControl]="fieldFormControl">
+            <mat-error *ngIf="fieldFormControl.hasError('required')">
+              City is <strong>required</strong>
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+          <mat-label>Region</mat-label>
+            <input #region matInput [formControl]="fieldFormControl">
+            <mat-error *ngIf="fieldFormControl.hasError('required')">
+              Region is <strong>required</strong>
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+          <mat-label>Country</mat-label>
+            <input #country matInput [formControl]="fieldFormControl">
+            <mat-error *ngIf="fieldFormControl.hasError('required')">
+              Country is <strong>required</strong>
+            </mat-error>
+        </mat-form-field>
+      </form>
+
+        <button (click)="getCurrentWeather(city.value, region.value, country.value)"> Get forecast </button>
 
         <div id="temp"> Temperature (Celcius) <p style="padding-left: 5px">{{temp}}</p> </div>
         <div id="pres"> Pressure (mb) <p style="padding-left: 5px">{{pres}}</p> </div>

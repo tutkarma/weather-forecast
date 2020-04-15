@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 import { BackApiService } from '../back-api.service';
 
 @Component({
@@ -8,13 +9,17 @@ import { BackApiService } from '../back-api.service';
 })
 export class CurrentWeatherComponent implements OnInit {
 
-   private weather = {}
-   temp: any
-   pres: any
-   app_temp: any
-   rh: any
-   clouds: any
-   wind_spd: any
+  private weather = {}
+  temp: any
+  pres: any
+  app_temp: any
+  rh: any
+  clouds: any
+  wind_spd: any
+
+  fieldFormControl = new FormControl('', [
+    Validators.required,
+  ]);
 
   constructor(private api: BackApiService) {
   }
@@ -25,12 +30,12 @@ export class CurrentWeatherComponent implements OnInit {
       }
 
       this.api.getWeather(data)
-              .subscribe(response => {
-                  console.log(response);
+              .subscribe(
+              response => {
                   this.weather = response['data'];
+              }, error => {
+                  console.error(error);
               })
-
-       console.log(this.weather)
 
       this.temp = this.weather['temp']
       this.pres = this.weather['pres']
