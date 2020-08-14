@@ -1,57 +1,57 @@
 import os
 
-from geopy import geocoders
 from werkzeug.exceptions import BadRequest, NotFound
 from flask import Blueprint, request, Response, current_app, json
 from flask_cors import CORS
 
-from forecast.utils.weather_api import WeatherAPI
 
-WEATHERBIT_API_TOKEN = os.environ.get('WEATHERBIT_API_TOKEN')
-GEO_NAMES_USERNAME = os.environ.get('GEO_NAMES_USERNAME')
+def construct_blueprint(
+    weather_api,
+    geocoder_api,
+    recsys
+):
+    weather = Blueprint('weather', __name__)
+    CORS(weather)
 
+    @weather.route('/weather', methods=['POST'])
+    def get_weather():
+        data = request.get_json(force=True)
 
-weather = Blueprint('weather', __name__)
-CORS(weather)
+        try:
+            query = data['query']
+        except KeyError:
+            raise BadRequest('Query not defined')
 
+        try:
+            coords = geocoder_api.get(query)
+        except Exception:
+            raise NotFound('Failed to get city coordinates')
 
-@weather.route('/weather', methods=['POST'])
-def get_weather():
-    data = request.get_json(force=True)
+        try:
+            weather_response = weather_api.get(coords)
+        except Exception:
+            raise BadRequest('Failed to get weather forecast')
 
-    try:
-        query = data['query']
-    except KeyError:
-        raise BadRequest('Query not defined')
+        info_for_recomendation = {
+            'wind_spd': weather_response['wind_spd'],
+            'app_temp': weather_response['app_temp'],
+            'clouds': weather_response['clouds'],
+            'snow': weather_response['snow'],
+            'rh': weather_response['rh'],
+        }
+        recomendation = recsys.get_recomendation(info_for_recomendation)
 
-    try:
-        gn = geocoders.GeoNames(username=GEO_NAMES_USERNAME)
-    except Exception:
-        raise BadRequest('Service is unavailable')
+        data = {
+            'data': {
+                'weather': weather_response,
+                'recomendation': recomendation,
+            }
+        }
 
-    try:
-        coords = gn.geocode(query)
-    except Exception:
-        raise BadRequest('Service is unavailable')
+        return Response(
+            json.dumps(data),
+            status=200,
+            mimetype='application/json'
+        )
 
-    if coords is None:
-        raise NotFound('Failed to get city coordinates')
-
-    d = {
-        'lat': coords.latitude,
-        'lon': coords.longitude
-    }
-
-    api = WeatherAPI(WEATHERBIT_API_TOKEN)
-
-    try:
-        response = api.get(d)
-    except Exception:
-        raise BadRequest('Failed to get weather forecast')
-
-    return Response(
-        json.dumps({'data': response}),
-        status=200,
-        mimetype='application/json'
-    )
-
+    return weather

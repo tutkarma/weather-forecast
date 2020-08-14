@@ -9,13 +9,14 @@ import { BackApiService } from '../back-api.service';
 })
 export class CurrentWeatherComponent implements OnInit {
 
-  private weather = {}
+  private data = {}
   temp: any
   pres: any
   app_temp: any
   rh: any
   clouds: any
   wind_spd: any
+  outfit: any
 
   fieldFormControl = new FormControl('', [
     Validators.required,
@@ -32,17 +33,18 @@ export class CurrentWeatherComponent implements OnInit {
       this.api.getWeather(data)
               .subscribe(
               response => {
-                  this.weather = response['data'];
+                  this.data = response['data'];
               }, error => {
                   console.error(error);
               })
 
-      this.temp = this.weather['temp']
-      this.pres = this.weather['pres']
-      this.app_temp = this.weather['app_temp']
-      this.rh = this.weather['rh']
-      this.clouds = this.weather['clouds']
-      this.wind_spd = this.weather['wind_spd']
+      this.temp = this.data['weather']['temp']
+      this.pres = this.data['weather']['pres']
+      this.app_temp = this.data['weather']['app_temp']
+      this.rh = this.data['weather']['rh']
+      this.clouds = this.data['weather']['clouds']
+      this.wind_spd = this.data['weather']['wind_spd']
+      this.outfit = this.data['recomendation']
   }
 
   ngOnInit(): void {
