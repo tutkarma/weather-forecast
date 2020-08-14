@@ -62,4 +62,4 @@ GEO_NAMES_USERNAME=XXX
 ./run_app
 ```
 
-После запуска перейти в браузере по адресу **localhost:4200**
+После запуска перейти в браузере по адресу [localhost:4200](http://localhost:4200/)
